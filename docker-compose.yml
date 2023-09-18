@@ -1,0 +1,21 @@
+version: '2.4'
+
+services:
+  planetzor:
+    build: .
+    ports:
+      - 54000:4000
+    volumes:
+      - ./data/go:/data
+    restart: on-failure
+    depends_on:
+      - db
+    pids_limit: 256
+    mem_limit: 300M
+    cpus: 0.25
+  db:
+    image: redislabs/redisgraph
+    restart: on-failure
+    command: ["redis-server", "--loadmodule", "/usr/lib/redis/modules/redisgraph.so", "--appendonly", "yes"]
+    mem_limit: 500M
+    cpus: 0.25
